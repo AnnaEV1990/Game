@@ -1,63 +1,85 @@
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 
-public class GameTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class GameTest {
+
     @Test
-    public void testWhenSecondPlayerWin(){
-        Player petya =new Player(123, "Петя",120);
-        Player vasya = new Player(124365, "Вася",100);
-        Game game= new Game();
-        game.register(petya);
-        game.register(vasya);
-        int actual = game.round("Вася","Петя");
-        int expected = 2;
-        Assertions.assertEquals(expected,actual);
+    public void testRoundPlayer1Wins() {
+        Game game = new Game();
+        Player player1 = new Player(1, "Player 1", 10);
+        Player player2 = new Player(2, "Player 2", 8);
+        game.register(player1);
+        game.register(player2);
 
-    }
-    @Test
-    public void testWhenFirstPlayerWin(){
-        Player petya =new Player(1, "Петя",120);
-        Player vasya = new Player(2, "Вася",100);
-        Game game= new Game();
-        game.register(petya);
-        game.register(vasya);
-        int actual = game.round("Вася", "Петя");
-        int expected = 1;
-        Assertions.assertEquals(expected,actual);
+        int result = game.round("Player 1", "Player 2");
 
-    }
-    @Test
-    public void testWhenStrenghtsEquel(){
-        Player petya =new Player(1, "Петя",100);
-        Player vasya = new Player(2, "Вася",100);
-        Game game= new Game();
-        game.register(petya);
-        game.register(vasya);
-        int actual = game.round("Вася", "Петя");
-        int expected = 0;
-        Assertions.assertEquals(expected,actual);
-
-    }
-    @Test
-    public void testWhenFirstNotExist(){
-        Player petya =new Player(123, "Петя",100);
-
-        Game game= new Game();
-        game.register(petya);
-
-        Assertions.assertThrows(NotRegisteredException.class,()->game.round("Жора","Петя"));
-
-    }
-    @Test
-    public void testWhenSecondNotExist(){
-        Player petya =new Player(123, "Петя",100);
-
-        Game game= new Game();
-        game.register(petya);
-
-        Assertions.assertThrows(NotRegisteredException.class,()->game.round("Петя","Жора"));
-
+        assertEquals(1, result);
     }
 
+    @Test
+    public void testRoundPlayer2Wins() {
+        Game game = new Game();
+        Player player1 = new Player(1, "Player 1", 8);
+        Player player2 = new Player(2, "Player 2", 10);
+        game.register(player1);
+        game.register(player2);
 
+        int result = game.round("Player 1", "Player 2");
+
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void testRoundDraw() {
+        Game game = new Game();
+        Player player1 = new Player(1, "Player 1", 10);
+        Player player2 = new Player(2, "Player 2", 10);
+        game.register(player1);
+        game.register(player2);
+
+        int result = game.round("Player 1", "Player 2");
+
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void testPlayerGetId() {
+        Player player = new Player(1, "Player 1", 10);
+        int id = player.getId();
+
+        assertEquals(1, id);
+    }
+
+    @Test
+    public void testRoundPlayer2NotRegisteredException() {
+        Game game = new Game();
+        Player player1 = new Player(1, "Player 1", 10);
+        game.register(player1);
+
+        assertThrows(NotRegisteredException.class, () -> {
+            game.round("Player 1", "Player 2");
+        });
+    }
+
+    @Test
+    public void testRoundPlayer1NotRegisteredException() {
+        Game game = new Game();
+        Player player2 = new Player(1, "Player 1", 10);
+        game.register(player2);
+
+        assertThrows(NotRegisteredException.class, () -> {
+            game.round("Player 1", "Player 2");
+        });
+    }
+
+    @Test
+    public void testRoundPlayersNotRegisteredException() {
+        Game game = new Game();
+
+        assertThrows(NotRegisteredException.class, () -> {
+            game.round("Player 1", "Player 2");
+        });
+    }
 }

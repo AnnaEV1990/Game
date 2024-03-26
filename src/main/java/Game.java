@@ -2,46 +2,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    List<Player> players = new ArrayList<>();
-
+    private List<Player> registeredPlayer = new ArrayList<>();
 
     public void register(Player player) {
-        players.add(player);
+        registeredPlayer.add(player);
+    }
+
+    private Player findPlayerByName(String playerName) {
+        for (Player player : registeredPlayer) {
+            if (player.getName().equals(playerName)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public int round(String playerName1, String playerName2) {
-        Player player1 = null;
-        Player player2 = null;
-
-        for (Player player : players) {
-            if (player.getName().equals(playerName1)) {
-                player1 = player;
-
-            }
-            if (player.getName().equals(playerName2)) {
-                player2 = player;
-            }
-            if (player1 == null) {
-                throw new NotRegisteredException(playerName1);
-
-            }
-            if (player2 == null) {
-                throw new NotRegisteredException(playerName2);
-
-            }
-
-            if (player1.getStrenght() > player2.getStrenght()) {
-                return 1;
-            } else if (player1.getStrenght() < player2.getStrenght()) {
-                return 2;
-            } else {
-                return 0;
-            }
+        Player player1 = findPlayerByName(playerName1);
+        Player player2 = findPlayerByName(playerName2);
+        if (player1 == null || player2 == null) {
+            throw new NotRegisteredException("Both players must be registered");
         }
-       return 0;
+        if (player1.getStrength() > player2.getStrength()) {
+            return 1;
+        } else if (player1.getStrength() < player2.getStrength()) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 }
-
-
-
-
